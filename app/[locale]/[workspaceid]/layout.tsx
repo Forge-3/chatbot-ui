@@ -7,7 +7,7 @@ import { getChatsByWorkspaceId } from "@/db/chats"
 import { getCollectionWorkspacesByWorkspaceId } from "@/db/collections"
 import { getFileWorkspacesByWorkspaceId } from "@/db/files"
 import { getFoldersByWorkspaceId } from "@/db/folders"
-import { getModelWorkspacesByWorkspaceId } from "@/db/models"
+import { getModelWorkspacesByWorkspaceId, getSharedModels } from "@/db/models"
 import { getPresetWorkspacesByWorkspaceId } from "@/db/presets"
 import { getPromptWorkspacesByWorkspaceId } from "@/db/prompts"
 import { getAssistantImageFromStorage } from "@/db/storage/assistant-images"
@@ -43,6 +43,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setPrompts,
     setTools,
     setModels,
+    setSharedModels,
     selectedWorkspace,
     setSelectedWorkspace,
     setSelectedChat,
@@ -155,6 +156,14 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId)
     setModels(modelData.models)
+
+    // Fetch shared models
+    try {
+      const sharedModels = await getSharedModels()
+      setSharedModels(sharedModels)
+    } catch (error) {
+      console.error("Failed to fetch shared models:", error)
+    }
 
     setChatSettings({
       model: (searchParams.get("model") ||

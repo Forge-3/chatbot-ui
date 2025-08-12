@@ -45,6 +45,7 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [files, setFiles] = useState<Tables<"files">[]>([])
   const [folders, setFolders] = useState<Tables<"folders">[]>([])
   const [models, setModels] = useState<Tables<"models">[]>([])
+  const [sharedModels, setSharedModels] = useState<Tables<"models">[]>([])
   const [presets, setPresets] = useState<Tables<"presets">[]>([])
   const [prompts, setPrompts] = useState<Tables<"prompts">[]>([])
   const [tools, setTools] = useState<Tables<"tools">[]>([])
@@ -168,6 +169,14 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
       const workspaces = await getWorkspacesByUserId(user.id)
       setWorkspaces(workspaces)
 
+      // Fetch shared models
+      try {
+        const sharedModels = await getSharedModels()
+        setSharedModels(sharedModels)
+      } catch (error) {
+        console.error("Failed to fetch shared models:", error)
+      }
+
       for (const workspace of workspaces) {
         let workspaceImageUrl = ""
 
@@ -225,6 +234,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setTools,
         workspaces,
         setWorkspaces,
+        sharedModels,
+        setSharedModels,
 
         // MODELS STORE
         envKeyMap,

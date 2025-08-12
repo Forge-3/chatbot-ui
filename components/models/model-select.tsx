@@ -25,6 +25,7 @@ export const ModelSelect: FC<ModelSelectProps> = ({
   const {
     profile,
     models,
+    sharedModels,
     availableHostedModels,
     availableLocalModels,
     availableOpenRouterModels
@@ -50,11 +51,24 @@ export const ModelSelect: FC<ModelSelectProps> = ({
     setIsOpen(false)
   }
 
+  // Filter out shared models from the regular models array to prevent duplicates
+  const sharedModelIds = new Set(sharedModels.map(model => model.id))
+
   const allModels = [
-    ...models.map(model => ({
+    ...models
+      .filter(model => !sharedModelIds.has(model.id)) // Filter out models that are in sharedModels
+      .map(model => ({
+        modelId: model.model_id as LLMID,
+        modelName: model.name,
+        provider: "custom" as ModelProvider,
+        hostedId: model.id,
+        platformLink: "",
+        imageInput: false
+      })),
+    ...sharedModels.map(model => ({
       modelId: model.model_id as LLMID,
-      modelName: model.name,
-      provider: "custom" as ModelProvider,
+      modelName: `${model.name} (Shared)`,
+      provider: "shared" as ModelProvider,
       hostedId: model.id,
       platformLink: "",
       imageInput: false

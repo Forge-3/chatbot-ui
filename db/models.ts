@@ -15,6 +15,19 @@ export const getModelById = async (modelId: string) => {
   return model
 }
 
+export const getSharedModels = async () => {
+  const { data: sharedModels, error } = await supabase
+    .from("models")
+    .select("*")
+    .neq("sharing", "private")
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return sharedModels
+}
+
 export const getModelWorkspacesByWorkspaceId = async (workspaceId: string) => {
   const { data: workspace, error } = await supabase
     .from("workspaces")
@@ -31,6 +44,19 @@ export const getModelWorkspacesByWorkspaceId = async (workspaceId: string) => {
   if (!workspace) {
     throw new Error(error.message)
   }
+
+  // Then get shared models
+  const { data: sharedModels, error: sharedError } = await supabase
+    .from("models")
+    .select("*")
+    .neq("sharing", "private")
+
+  if (sharedError) {
+    throw new Error(sharedError.message)
+  }
+
+  // Combine workspace models with shared models
+  workspace.models = [...workspace.models, ...(sharedModels || [])]
 
   return workspace
 }

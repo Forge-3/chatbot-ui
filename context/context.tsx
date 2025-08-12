@@ -30,6 +30,8 @@ interface ChatbotUIContext {
   setFolders: Dispatch<SetStateAction<Tables<"folders">[]>>
   models: Tables<"models">[]
   setModels: Dispatch<SetStateAction<Tables<"models">[]>>
+  sharedModels: Tables<"models">[]
+  setSharedModels: Dispatch<SetStateAction<Tables<"models">[]>>
   presets: Tables<"presets">[]
   setPresets: Dispatch<SetStateAction<Tables<"presets">[]>>
   prompts: Tables<"prompts">[]
@@ -156,6 +158,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setFolders: () => {},
   models: [],
   setModels: () => {},
+  sharedModels: [],
+  setSharedModels: () => {},
   presets: [],
   setPresets: () => {},
   prompts: [],

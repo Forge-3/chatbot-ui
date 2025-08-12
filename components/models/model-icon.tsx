@@ -3,7 +3,7 @@ import mistral from "@/public/providers/mistral.png"
 import groq from "@/public/providers/groq.png"
 import perplexity from "@/public/providers/perplexity.png"
 import { ModelProvider } from "@/types"
-import { IconSparkles } from "@tabler/icons-react"
+import { IconShare, IconSparkles } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 import { FC, HTMLAttributes } from "react"
@@ -101,6 +101,8 @@ export const ModelIcon: FC<ModelIconProps> = ({
           height={height}
         />
       )
+    case "shared":
+      return <IconShare width={width} height={height} />
     default:
       return <IconSparkles size={width} />
   }
