@@ -224,6 +224,44 @@ In the text tabs, click on "Providers" and make sure "Email" is enabled.
 
 We recommend turning off "Confirm email" for your own personal instance.
 
+##### Google OAuth Setup (Optional)
+
+To enable Google OAuth login:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Navigate to "APIs & Services" > "Credentials"
+4. Click "Create Credentials" and select "OAuth client ID"
+5. Select "Web application" as the application type
+6. Add your Supabase project URL to the "Authorized JavaScript origins" (e.g., `https://your-project-ref.supabase.co`)
+7. Add your Supabase project URL with the auth callback path to the "Authorized redirect URIs" (e.g., `https://your-project-ref.supabase.co/auth/v1/callback`)
+8. Click "Create" and note your Client ID and Client Secret
+9. In your Supabase dashboard, go to "Authentication" > "Providers"
+10. Enable "Google" and enter your Client ID and Client Secret
+11. Save the changes
+
+For local development, you'll need to add the following environment variables to your `.env.local` file:
+
+```
+SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=your-google-client-id
+SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=your-google-client-secret
+NEXT_PUBLIC_ENABLE_GOOGLE_AUTH=true
+```
+
+By default, the Google sign-in button is hidden. Setting `NEXT_PUBLIC_ENABLE_GOOGLE_AUTH` to `true` will make the Google sign-in button visible on the login page.
+
+##### Disabling Classic Login (Optional)
+
+If you want to use only OAuth providers (like Google) for authentication and disable the classic email/password login:
+
+1. Set the following environment variable in your `.env.local` file:
+
+```
+NEXT_PUBLIC_DISABLE_CLASSIC_AUTH=true
+```
+
+This will hide the email/password fields and login/signup buttons, leaving only the OAuth login options visible.
+
 #### 4. Connect to Hosted DB
 
 Open up your repository for your hosted instance of Chatbot UI.
