@@ -262,6 +262,24 @@ NEXT_PUBLIC_DISABLE_CLASSIC_AUTH=true
 
 This will hide the email/password fields and login/signup buttons, leaving only the OAuth login options visible.
 
+##### Email Domain Filtering (Optional)
+
+You can restrict sign-ups and logins to specific email domains or specific email addresses:
+
+1. To restrict by domain, set the `EMAIL_DOMAIN_WHITELIST` environment variable in your `.env.local` file:
+
+```
+EMAIL_DOMAIN_WHITELIST=example.com,another-example.com
+```
+
+2. To allow specific email addresses, set the `EMAIL_WHITELIST` environment variable:
+
+```
+EMAIL_WHITELIST=user1@example.com,user2@another-domain.com
+```
+
+These restrictions apply to both classic email/password sign-up and Google OAuth authentication. Users with email addresses that don't match the allowed domains or aren't in the whitelist will be prevented from signing up or logging in.
+
 #### 4. Connect to Hosted DB
 
 Open up your repository for your hosted instance of Chatbot UI.

@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { SubmitButton } from "@/components/ui/submit-button"
 import { createClient } from "@/lib/supabase/server"
+import { getEnvVarOrEdgeConfigValue } from "@/lib/utils/env"
 import { Database } from "@/supabase/types"
 import { createServerClient } from "@supabase/ssr"
-import { get } from "@vercel/edge-config"
 import { Metadata } from "next"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -83,15 +83,6 @@ export default async function Login({
     }
 
     return redirect(`/${homeWorkspace.id}/chat`)
-  }
-
-  const getEnvVarOrEdgeConfigValue = async (name: string) => {
-    "use server"
-    if (process.env.EDGE_CONFIG) {
-      return await get<string>(name)
-    }
-
-    return process.env[name]
   }
 
   const signUp = async (formData: FormData) => {
@@ -175,7 +166,7 @@ export default async function Login({
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${origin}/auth/callback`
+        redirectTo: `${origin}/auth/callback?provider=google`
       }
     })
 
