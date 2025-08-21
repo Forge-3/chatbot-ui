@@ -20,9 +20,10 @@ export default async function Login({
 }: {
   searchParams: { message: string }
 }) {
-  const disableClassicAuth =
-    process.env.NEXT_PUBLIC_DISABLE_CLASSIC_AUTH === "true"
-  const enableGoogleAuth = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_AUTH === "true"
+  const enableClassicAuth =
+    process.env.NEXT_PUBLIC_ENABLE_CLASSIC_AUTH === "true"
+  const enableGoogleAuth =
+    process.env.SUPABASE_AUTH_EXTERNAL_GOOGLE_ENABLED === "true"
   const cookieStore = cookies()
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -185,7 +186,7 @@ export default async function Login({
       >
         <Brand />
 
-        {!disableClassicAuth && (
+        {enableClassicAuth && (
           <>
             <Label className="text-md mt-4" htmlFor="email">
               Email
@@ -254,7 +255,7 @@ export default async function Login({
           </Button>
         )}
 
-        {!disableClassicAuth && (
+        {enableClassicAuth && (
           <div className="text-muted-foreground mt-1 flex justify-center text-sm">
             <span className="mr-1">Forgot your password?</span>
             <button

@@ -1,0 +1,146 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=http://localhost:8000
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}
+    networks:
+      - supabase_network
+    depends_on:
+      - kong
+      - db
+      - studio
+
+  kong:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: kong
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  studio:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: studio
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  auth:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: auth
+    env_file:
+      - .env
+      - .env.local
+    networks:
+      - supabase_network
+
+  db:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: db
+    volumes:
+      - ./supabase/migrations:/docker-entrypoint-initdb.d/migrations/
+      - ./supabase/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  vector:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: vector
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  analytics:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: analytics
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  rest:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: rest
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  realtime:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: realtime
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  meta:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: meta
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+#  storage:
+#    extends:
+#      file: docker/docker-compose.supabase.yml
+#      service: storage
+#    env_file:
+#      - .env
+#    networks:
+#      - supabase_network
+
+  functions:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: functions
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+  supavisor:
+    extends:
+      file: docker/docker-compose.supabase.yml
+      service: supavisor
+    env_file:
+      - .env
+    networks:
+      - supabase_network
+
+#  imgproxy:
+#    extends:
+#      file: docker/docker-compose.supabase.yml
+#      service: imgproxy
+#    env_file:
+#      - .env
+#    networks:
+#      - supabase_network
+
+networks:
+  supabase_network:
+    driver: bridge
+
+volumes:
+  db-config:

@@ -26,7 +26,21 @@ module.exports = withBundleAnalyzer(
       ]
     },
     experimental: {
-      serverComponentsExternalPackages: ["sharp", "onnxruntime-node"]
+      serverComponentsExternalPackages: ["sharp", "onnxruntime-node"],
+      workerThreads: true,
+      cpus: 1
+    },
+    staticPageGenerationTimeout: 180,
+    output: 'standalone',
+    webpack: (config, { isServer }) => {
+      if (!isServer) {
+        config.resolve.fallback = {
+          ...config.resolve.fallback,
+          fs: false,
+          module: false,
+        };
+      }
+      return config;
     }
   })
 )
